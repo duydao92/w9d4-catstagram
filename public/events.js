@@ -48,9 +48,12 @@ window.addEventListener('DOMContentLoaded', () => {
     commentBtn.addEventListener('submit', e => {
         const commentInput = document.getElementById("user-comment");
         const userComment = commentInput.value;
+        const commentSection = document.querySelector('.comments');
+        const newComment = document.createElement('div');
+        commentSection.appendChild(newComment);
         e.preventDefault();
         fetch('/kitten/comments', {method: "POST", headers: {'Content-Type' : "application/json"}, body: JSON.stringify({comment: userComment}) })
         .then(res => res.json())
-        .then(res => console.log(res.comments))
+        .then(res => newComment.innerHTML = res.comments[res.comments.length - 1])
     })
 })
