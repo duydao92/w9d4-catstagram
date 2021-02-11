@@ -17,6 +17,27 @@ window.addEventListener('DOMContentLoaded', () => {
     newPicButton.addEventListener('click', e =>{
         getCat();
     })
+    const upvote = document.getElementById('upvote');
+    const downvote = document.getElementById('downvote');
+    const score = document.querySelector('.score');
+    upvote.addEventListener('click', () =>{
+        fetch('/kitten/upvote', {method:'PATCH'})
+        .then((res) => res.json())
+        .then((res) => {
+           score.innerHTML = res.score
+        }).catch((err) =>{
+            window.alert(err);
+        })
+    })
+    downvote.addEventListener('click', () =>{
+        fetch('/kitten/downvote', {method:'PATCH'})
+        .then((res) => res.json())
+        .then((res) => {
+           score.innerHTML = res.score
+        }).catch((err) =>{
+            window.alert(err);
+        })
+    })
 
 
 
