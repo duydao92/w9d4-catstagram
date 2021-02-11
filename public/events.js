@@ -45,15 +45,39 @@ window.addEventListener('DOMContentLoaded', () => {
     //comment section
 
     const commentBtn = document.querySelector('.comment-form');
+    const commentSection = document.querySelector('.comments');
+
+    let counter = -1;
     commentBtn.addEventListener('submit', e => {
+        e.preventDefault();
+        counter++;
         const commentInput = document.getElementById("user-comment");
         const userComment = commentInput.value;
-        const commentSection = document.querySelector('.comments');
         const newComment = document.createElement('div');
-        commentSection.appendChild(newComment);
-        e.preventDefault();
+        const deleleBtn = document.createElement('button');
+        const commentBox = document.createElement('div')
+        commentBox.setAttribute('id', `${counter}`)
+        deleleBtn.innerHTML = "Delete";
+        deleleBtn.setAttribute('class', 'delete');
+        commentBox.appendChild(newComment);
+        commentBox.appendChild(deleleBtn);
+        commentSection.appendChild(commentBox);
+
         fetch('/kitten/comments', {method: "POST", headers: {'Content-Type' : "application/json"}, body: JSON.stringify({comment: userComment}) })
-        .then(res => res.json())
-        .then(res => newComment.innerHTML = res.comments[res.comments.length - 1])
+            .then(res => res.json())
+            .then(res =>
+                newComment.innerHTML = res.comments[res.comments.length - 1])
+        })
+
+    commentSection.addEventListener('click', e => {
+        if (e.target.innerHTML === 'Delete') {
+            const div = e.target.parentNode;
+            console.log(div)
+            commentSection.removeChild(div)
+            let divId = div.id;
+            fetch(`/kitten/comments/${divId}`, {method: 'DELETE'})
+                .then(res => res.json())
+                .then(res => console.log(res))
+        }
     })
 })
